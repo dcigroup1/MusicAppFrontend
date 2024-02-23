@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Our API Data</h1>
+
+{% if error_message %}
+<p>{{ error_message }}</p>
+{% else %}
+<ul>
+  {% for item in api_data %}
+  <li>Title: {{ item.title }}, Deezer ID: {{ item.deezer_id }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endblock content %}
