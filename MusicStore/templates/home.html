@@ -1,13 +1,72 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% load static %}{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h3>Welcome to our music store management project!</h3>
+      <img src="{% static 'base.png' %}" alt="base" class="img-fluid w-70" />
+      <p></p>
 
-<h1>Our API Data</h1>
+      <p>
+        We are a team consisting of Leyla and Jonnathan on the backend / Abraham
+        and Rene on the frontend, and we are excited to introduce you to our
+        project.
+      </p>
 
-{% if error_message %}
-<p>{{ error_message }}</p>
-{% else %}
-<ul>
-  {% for item in api_data %}
-  <li>Title: {{ item.title }}, Deezer ID: {{ item.deezer_id }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endblock content %}
+      <p>
+        In our platform, we have developed a robust backend that offers a
+        variety of endpoints through our API. Access to the information in our
+        album collection does not require authentication. Here, you can find an
+        overview of the available albums.
+      </p>
+      <p>
+        However, for more advanced functions such as creating, modifying, and
+        deleting entries, as well as accessing the full view of the collection,
+        authentication is necessary. We have implemented authentication tokens
+        to ensure the security and privacy of our users.
+      </p>
+      <p>
+        Additionally, our API integrates with the Deezer API, allowing us to
+        complement our collection with additional information about the albums,
+        such as covers, artists, and more.
+      </p>
+      <p>
+        In the frontend, we have used Django and Bootstrap to create an
+        intuitive and appealing user experience. Here, we combine the
+        information stored in our API with data provided by Deezer, providing a
+        complete experience for music lovers.
+      </p>
+      <p>
+        Thank you for visiting our project, and we hope you enjoy exploring our
+        music album collection!
+      </p>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-5">
+      <h3>Our API Data without Authorization</h3>
+
+      {% if error_message %}
+      <p>{{ error_message }}</p>
+      {% else %}
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Artist</th>
+            <th scope="col">Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in api_data %}
+          <tr>
+            <td>{{ item.title }}</td>
+            <td>{{ item.artist }}</td>
+            <td>{{ item.year }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

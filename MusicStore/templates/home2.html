@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Our API Data using token auth</h1>
+
+{% if error_message %}
+<p>{{ error_message }}</p>
+{% else %}
+<ul>
+  {% for item in api_data %}
+  <li>
+    Title: {{ item.title }}, Deezer ID: {{ item.deezer_id }}, artist:
+    {{item.artist }}, Year: {{ item.year }}, price: ${{ item.price }} available:
+    {{ item.available_units }}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %} {% endblock content %}

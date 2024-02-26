@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<style>
+  .card-text {
+    line-height: 1;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <h3>What about this page?</h3>
+      <p>
+        This page is dynamically generated from the items stored in our API.
+        Leveraging the deezer_id attribute, it retrieves additional information
+        for each item such as the cover image or the record label. Subsequently,
+        it evaluates the remaining stock of each product to determine the
+        appropriate type of purchase button to display.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    {% for item in api_data %}
+    <div class="col-md-4 mb-3">
+      <div class="card text-bg-dark">
+        <div class="row g-0">
+          <div class="col-md-4 d-flex align-items-center">
+            <a href="#">
+              <img
+                src="{{ item.cover }}"
+                class="img-fluid rounded-start"
+                alt="{{ record.title }}"
+                style="padding: 10px"
+              />
+            </a>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h6 class="card-title">Title: {{ item.title }}</h6>
+              <p class="card-text">Artist: {{ item.artist }}</p>
+              <p class="card-text">Year: {{ item.year }}</p>
+              <p class="card-text">Label: {{ item.label }}</p>
+              <div class="row">
+                <div class="col">
+                  <h6>€ {{ item.price }}</h6>
+                </div>
+                <div class="col">
+                  {% if item.available_units == 1 %}
+                  <button type="button" class="btn btn-success">
+                    Last One
+                  </button>
+                  {% else %} {% if item.available_units > 0 %}
+                  <button type="button" class="btn btn-success">Order</button>
+                  {% else %}
+                  <button type="button" class="btn btn-danger">
+                    Unavailable
+                  </button>
+                  {% endif %} {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}
