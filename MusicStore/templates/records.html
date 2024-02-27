@@ -1,11 +1,9 @@
 {% extends "base.html" %} {% load static %} {% block content %}
-
 <style>
   .card-text {
     line-height: 1;
   }
 </style>
-
 <div class="container">
   <div class="row">
     <div class="col-2"></div>
@@ -21,14 +19,14 @@
     </div>
   </div>
   <div class="row">
-    {% for item in api_data %}
+    {% for record, formatted_data in records %}
     <div class="col-md-4 mb-3">
       <div class="card text-bg-dark">
         <div class="row g-0">
           <div class="col-md-4 d-flex align-items-center">
-            <a href="#">
+            <a href="{{ formatted_data.url }}">
               <img
-                src="{{ item.cover }}"
+                src="{{ record.cover }}"
                 class="img-fluid rounded-start"
                 alt="{{ record.title }}"
                 style="padding: 10px"
@@ -37,20 +35,21 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h6 class="card-title">Title: {{ item.title }}</h6>
-              <p class="card-text">Artist: {{ item.artist }}</p>
-              <p class="card-text">Year: {{ item.year }}</p>
-              <p class="card-text">Label: {{ item.label }}</p>
+              <h5 class="card-title">{{ record.title }}</h5>
+              <p class="card-text">
+                Artist: {{ record.contributors | join:", " }}
+              </p>
+
               <div class="row">
                 <div class="col">
-                  <h6>€ {{ item.price }}</h6>
+                  <h6>€ {{ record.price }}</h6>
                 </div>
                 <div class="col">
-                  {% if item.available_units == 1 %}
+                  {% if record.available_units == 1 %}
                   <button type="button" class="btn btn-success">
                     Last One
                   </button>
-                  {% else %} {% if item.available_units > 0 %}
+                  {% else %} {% if record.available_units > 0 %}
                   <button type="button" class="btn btn-success">Order</button>
                   {% else %}
                   <button type="button" class="btn btn-danger">

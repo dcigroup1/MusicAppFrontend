@@ -1,16 +1,71 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} {% load static %} {% block content %}
+
 <div class="container">
-  {% if record %}
   <div class="row">
-    <div class="col-md-6">
-      <h1>{{ record.title }}</h1>
-      <p>Artist: {{ record.artist }}</p>
-      <p>Year: {{ record.year }}</p>
-      <!-- Agrega aquí más detalles del registro si es necesario -->
+    <div class="col-2"></div>
+    <div class="col-8">
+      <h3>This is the detailed view</h3>
+      <p>
+        Explore detailed information about each entry on our page. From data
+        gathered from our APIs to information provided by the Deezer API, you'll
+        find everything you need to know about each album here.
+      </p>
     </div>
   </div>
-  {% else %}
-  <p>No record found</p>
-  {% endif %}
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col-4 justify-content-center">
+      <div class="card" style="width: 18rem">
+        <img
+          class="card-img-top"
+          src="{{ deezer_info.cover }}"
+          alt="{{ record.title }}"
+        />
+        <div class="card-body text-white bg-dark mb-3">
+          <h5 class="card-title">Title: {{ record.title }}</h5>
+          <h6 class="card-title">
+            Artist: {{ deezer_info.contributors | join:", " }}
+          </h6>
+          <h6 class="card-title">Year: {{ record.year }}</h6>
+          <h6 class="card-title">Genre: {{ record.genre }}</h6>
+          <h6 class="card-title">Label: {{ deezer_info.label }}</h6>
+        </div>
+        <div class="card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-white bg-dark">
+              Price: € {{ record.price }}
+            </li>
+            <li class="list-group-item text-white bg-dark">
+              Available Units: {{ record.available_units }}
+            </li>
+            <li
+              class="list-group-item text-white bg-dark d-flex justify-content-center"
+            >
+              {% if record.available_units == 1 %}
+              <button type="button" class="btn btn-success">Last One</button>
+              {% else %} {% if record.available_units > 0 %}
+              <button type="button" class="btn btn-success">Order</button>
+              {% else %}
+              <button type="button" class="btn btn-danger">Unavailable</button>
+              {% endif %} {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-4 justify-content-center">
+      <h3>Tracklist:</h3>
+      <ul>
+        {% for song in deezer_info.tracklist %}
+        <li>{{ song.title }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-1"></div>
+  </div>
+  <br />
+  <div class="container d-flex justify-content-center align-items-center"></div>
 </div>
+
 {% endblock %}

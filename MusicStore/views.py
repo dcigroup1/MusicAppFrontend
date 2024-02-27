@@ -1,3 +1,6 @@
+from django.urls import reverse
+from django.shortcuts import redirect
+
 from django.views.generic import DetailView
 from django.views.generic import TemplateView, ListView, DetailView
 import requests
@@ -51,8 +54,18 @@ class BaseRecordView(TemplateView):
                 item.update(deezer_info)
 
             formatted_data = [
-                {'title': item['title'], 'artist': item['artist'], 'year': item['year'], 'genre': item['genre'], 'price': item['price'], 'available_units': item['available_units'], 'deezer_id': item['deezer_id']} for item in api_data]
+                {'title': item['title'],
+                 'artist': item['artist'],
+                 'year': item['year'],
+                 'genre': item['genre'],
+                 'price': item['price'],
+                 'available_units': item['available_units'],
+                 'url': (reverse('record_detail', kwargs={'pk': item['id']})),
+                 'fixed': 'fixed value',
+                 'deezer_id': item['deezer_id'],
+                 } for item in api_data]
 
+            context['records'] = zip(api_data, formatted_data)
             context['api_data'] = api_data
             context['formatted_data'] = formatted_data
 
@@ -62,18 +75,16 @@ class BaseRecordView(TemplateView):
         return context
 
 
-class DetailRecordView(DetailView):
+class DetailRecordView(TemplateView):
     template_name = 'record_details.html'
-    context_object_name = 'record'
-    model = None
 
-    def get_queryset(self):
-        return []
+    def retrieve_album_info(self, deezer_id):
+        return get_deezer_album_info(deezer_id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         record_id = self.kwargs.get('pk')
-        url = f'http://127.0.0.1:7000/api/all/{record_id}/'
+        url = f'http://127.0.0.1:7000/api/{record_id}/'
 
         token = '7beaf66a980341f602e5cdc1d76abbe61aaf0751'
         headers = {'Authorization': f'Token {token}'}
@@ -83,6 +94,12 @@ class DetailRecordView(DetailView):
         if response.status_code == 200:
             record_data = response.json()
             context['record'] = record_data
+
+            deezer_id = record_data.get('deezer_id')
+
+            if deezer_id:
+                deezer_info = self.retrieve_album_info(deezer_id)
+                context['deezer_info'] = deezer_info
         else:
             context['error_message'] = 'Error obtaining data from the API'
 
